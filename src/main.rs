@@ -105,14 +105,14 @@ async fn upload(
 ) -> anyhow::Result<VersionResponse> {
     // Package the extension directory into a zip
     eprintln!("Packaging extension from {}...", path.display());
-    let zip_bytes = package_extension(&path)?;
+    let zip_bytes = package_extension(path)?;
 
     eprintln!("Uploading to AMO...");
     let response = client
         .post("https://addons.mozilla.org/api/v5/addons/upload/")
         .header(
             "Authorization",
-            format!("jwt {}", jwt(&api_key, &api_secret)?),
+            format!("jwt {}", jwt(api_key, api_secret)?),
         )
         .multipart(
             Form::new().text("channel", "unlisted").part(
@@ -137,7 +137,7 @@ async fn upload(
             ))
             .header(
                 "Authorization",
-                format!("jwt {}", jwt(&api_key, &api_secret)?),
+                format!("jwt {}", jwt(api_key, api_secret)?),
             )
             .send()
             .await?;
@@ -153,7 +153,7 @@ async fn upload(
         ))
         .header(
             "Authorization",
-            format!("jwt {}", jwt(&api_key, &api_secret)?),
+            format!("jwt {}", jwt(api_key, api_secret)?),
         )
         .json(&CreateAddonRequest {
             version: CreateVersionRequest {
